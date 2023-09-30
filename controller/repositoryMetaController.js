@@ -16,8 +16,8 @@ app.listen(port, () => {
 });
 
 app.get('/branches', async (req, res) => {
-    try{
-        let repoName = req.query.repoName ? "casey" :  req.query.repoName
+    try {
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
         let branches = await repositoryOps.getBranches(repoPath + repoName)
         res.json(branches);
     } catch (error) {
@@ -27,7 +27,7 @@ app.get('/branches', async (req, res) => {
 
 app.get('/commits', async (req, res) => {
     try {
-        let repoName = req.query.repoName ? "casey" :  req.query.repoName
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
         let commits = await repositoryOps.getCommits(repoPath + repoName, req.query.branch)
         res.json(commits);
     } catch (error) {
@@ -37,7 +37,7 @@ app.get('/commits', async (req, res) => {
 
 app.get('/diff', async (req, res) => {
     try {
-        let repoName = req.query.repoName ? "casey" :  req.query.repoName
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
         let originalHash = req.query.originalHash
         let updatedHash = req.query.updatedHash
         let rawDiff = await repositoryOps.getRawDiff(repoPath + repoName, originalHash, updatedHash)
