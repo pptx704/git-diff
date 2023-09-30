@@ -53,7 +53,7 @@ async function cloneRepository(url) {
 }
 
 async function getRawDiff(repoPath, originalHash, updatedHash) {
-    let command = `cd ${repoPath} && git diff ${originalHash} ${updatedHash}`
+    let command = `cd ${repoPath} && git diff ${originalHash} ${updatedHash} --raw`
     console.log(command)
     return execSync(command, { encoding: 'utf-8' });
 }
