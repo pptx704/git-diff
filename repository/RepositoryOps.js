@@ -1,4 +1,5 @@
-let Git = require("nodegit");
+const Git = require("nodegit");
+const execSync = require('child_process').execSync;
 
 function getBranches(repoPath) {
     return Git.Repository.open(repoPath)
@@ -51,6 +52,13 @@ async function cloneRepository(url) {
     }
 }
 
+async function getRawDiff(repoPath, originalHash, updatedHash) {
+    let command = `cd ${repoPath} && git diff ${originalHash} ${updatedHash}`
+    console.log(command)
+    return execSync(command, { encoding: 'utf-8' });
+}
+
+
 // async function getDiff(repoPath, original, updated) {
 //     let repo = await Git.Repository.open(repoPath);
 //     let originalCommit = await repo.getCommit(original);
@@ -63,7 +71,7 @@ async function cloneRepository(url) {
 //     const patches
 // }
 
-module.exports = { getBranches, getCommits, cloneRepository}
+module.exports = { getBranches, getCommits, cloneRepository, getRawDiff}
 //
 // let Git = require("nodegit");
 //

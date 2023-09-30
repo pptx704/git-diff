@@ -26,10 +26,14 @@ app.get('/commits', async (req, res) => {
 });
 
 app.get('/diff', async (req, res) => {
-    let originalHash = req.query.original
-    let updatedHash = req.query.updated
-    let commits = await repositoryOps.getDiff(repoPath, originalHash, updatedHash)
-    res.json(commits);
+    try {
+        let originalHash = req.query.originalHash
+        let updatedHash = req.query.updatedHash
+        let rawDiff = await repositoryOps.getRawDiff(repoPath, originalHash, updatedHash)
+        res.json({rawDiff: rawDiff});
+    } catch (error) {
+        console.error("Error: ${error}");
+    }
 });
 
 app.post('/repository', async (req, res) => {
