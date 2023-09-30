@@ -58,6 +58,42 @@ async function getRawDiff(repoPath, originalHash, updatedHash) {
     return execSync(command, { encoding: 'utf-8' });
 }
 
+async function getListDiff(repoPath, originalHash, updatedHash) {
+    let command = `cd ${repoPath} && git diff ${originalHash} ${updatedHash}`
+    console.log(command)
+    let rawdiff = execSync(command, { encoding: 'utf-8' });
+    // split the rawdiff into array. `diff --git`.
+    let diffArray = rawdiff.split('diff --git')
+    // keep the `diff --git` in each element of the array
+    diffArray = diffArray.map((diff) => 'diff --git' + diff)
+    // remove the first element of the array which is an empty string
+    return diffArray.slice(1)
+}
+
+async function getFileDiff(repoPath, originalHash, updatedHash, fileName) {
+    // get the list diff
+    let listDiff = await getListDiff(repoPath, originalHash, updatedHash)
+    // find the diff that contains the fileName
+    let diff = listDiff.find((diff) => diff.includes(fileName))
+    console.log(fileName)
+    // return the diff
+    return diff
+}
+
+async function getFilePaths(repoPath, originalHash, updatedHash){
+    // get the list diff
+    let listDiff = await getListDiff(repoPath, originalHash, updatedHash)
+    // get the file paths
+    let filePaths = listDiff.map((diff) => {
+        let filePath = diff.split('b/')[1].split(' ')[0]
+        // split the file path by the new line character and keep the first element
+        filePath = filePath.split('\n')[0]
+        return filePath
+    })
+    // return the file paths
+    return filePaths
+}
+
 async function getAvailableRepositories() {
     let command = `cd git-repos && ls`
     // get the name of those repositories in the git-repos folder
@@ -80,7 +116,7 @@ async function getAvailableRepositories() {
 //     const patches
 // }
 
-module.exports = { getBranches, getCommits, cloneRepository, getRawDiff, getAvailableRepositories}
+module.exports = { getBranches, getCommits, cloneRepository, getRawDiff, getAvailableRepositories, getListDiff, getFileDiff, getFilePaths}
 //
 // let Git = require("nodegit");
 //

@@ -21,7 +21,7 @@ app.get('/branches', async (req, res) => {
         let branches = await repositoryOps.getBranches(repoPath + repoName)
         res.json(branches);
     } catch (error) {
-        console.error("Error: ${error}");
+        console.error(`Error: ${error}`);
     }
 });
 
@@ -31,7 +31,7 @@ app.get('/commits', async (req, res) => {
         let commits = await repositoryOps.getCommits(repoPath + repoName, req.query.branch)
         res.json(commits);
     } catch (error) {
-        console.error("Error: ${error}");
+        console.error(`Error: ${error}`);
     }
 });
 
@@ -43,7 +43,32 @@ app.get('/diff', async (req, res) => {
         let rawDiff = await repositoryOps.getRawDiff(repoPath + repoName, originalHash, updatedHash)
         res.json({rawDiff: rawDiff});
     } catch (error) {
-        console.error("Error: ${error}");
+        console.error(`Error: ${error}`);
+    }
+});
+
+app.get('/files', async (req, res) => {
+    try {
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
+        let originalHash = req.query.originalHash
+        let updatedHash = req.query.updatedHash
+        let files = await repositoryOps.getFilePaths(repoPath + repoName, originalHash, updatedHash)
+        res.json(files);
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+});
+
+app.get('/filediff', async (req, res) => {
+    try {
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
+        let originalHash = req.query.originalHash
+        let updatedHash = req.query.updatedHash
+        let filePath = req.query.filePath
+        let rawDiff = await repositoryOps.getFileDiff(repoPath + repoName, originalHash, updatedHash, filePath)
+        res.json({rawDiff: rawDiff});
+    } catch (error) {
+        console.error(`Error: ${error}`);
     }
 });
 
@@ -52,7 +77,7 @@ app.get('/repositories', async (req, res) => {
         let repositories = await repositoryOps.getAvailableRepositories()
         res.json(repositories);
     } catch (error) {
-        console.error("Error: ${error}");
+        console.error(`Error: ${error}`);
     }
 });
 
@@ -66,6 +91,6 @@ app.post('/repository', async (req, res) => {
         let result = await repositoryOps.cloneRepository(repository)
         res.json({message: result})
     } catch (error) {
-        console.error("Error: ${error}");
+        console.error(`Error: ${error}`);
     }
 });
