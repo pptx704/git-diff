@@ -14,3 +14,8 @@ app.get('/branches', async (req, res) => {
     let branches = await repositoryOps.getBranches(repoPath)
     res.json(branches);
 });
+
+app.get('/commits', async (req, res) => {
+    let commits = await repositoryOps.getCommits(repoPath, req.query.branch)
+    res.json(commits);
+});
