@@ -16,11 +16,34 @@ function getBranches(repoPath) {
 }
 
 async function getCommits(repoPath, branchName) {
-    let repo = await Git.Repository.open(repositoryPath);
-    const branch = await repo.getBranch(branchName);
-    const history = await branch.history();
-    history.start();
+    try {
+        let repo = await Git.Repository.open(repoPath)
+        let revwalk = Git.Revwalk.create(repo);
+        revwalk.sorting(Git.Revwalk.SORT.TOPOLOGICAL);
+        let branch = await repo.getBranch(branchName);
+        revwalk.pushRef(branch.name());
+        const commitsList = [];
+        let commit = revwalk.next();
 
+        while (!commit.done) {
+            const commitObj = await repo.getCommit(commit);
+            // commitsList.push({
+            //     sha: commitObj.sha(),
+            //     date: commitObj.date(),
+            //     message: commitObj.message(),
+            // });
+            console.log({
+                sha: commitObj.sha(),
+                date: commitObj.date(),
+                message: commitObj.message(),
+            });
+            commit = revwalk.next();
+        }
+        return commitsList
+    } catch (error) {
+        console.error(`Error: ${error}`);
+        return [];
+    }
 }
 
 module.exports = { getBranches }
