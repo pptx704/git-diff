@@ -1,0 +1,3 @@
+[submodule "git-repos/casey"]
+	path = git-repos/casey
+	url = https://gitlab.com/k1ab/casey.git
