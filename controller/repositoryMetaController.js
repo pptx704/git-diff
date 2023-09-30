@@ -9,27 +9,38 @@ app.use(cors());
 app.use(bodyParser.json());
 const port = 3000;
 
-const repoPath = 'git-repos/casey'
+const repoPath = 'git-repos/'
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
 app.get('/branches', async (req, res) => {
-    let branches = await repositoryOps.getBranches(repoPath)
-    res.json(branches);
+    try{
+        let repoName = req.query.repoName ? "casey" :  req.query.repoName
+        let branches = await repositoryOps.getBranches(repoPath + repoName)
+        res.json(branches);
+    } catch (error) {
+        console.error("Error: ${error}");
+    }
 });
 
 app.get('/commits', async (req, res) => {
-    let commits = await repositoryOps.getCommits(repoPath, req.query.branch)
-    res.json(commits);
+    try {
+        let repoName = req.query.repoName ? "casey" :  req.query.repoName
+        let commits = await repositoryOps.getCommits(repoPath + repoName, req.query.branch)
+        res.json(commits);
+    } catch (error) {
+        console.error("Error: ${error}");
+    }
 });
 
 app.get('/diff', async (req, res) => {
     try {
+        let repoName = req.query.repoName ? "casey" :  req.query.repoName
         let originalHash = req.query.originalHash
         let updatedHash = req.query.updatedHash
-        let rawDiff = await repositoryOps.getRawDiff(repoPath, originalHash, updatedHash)
+        let rawDiff = await repositoryOps.getRawDiff(repoPath + repoName, originalHash, updatedHash)
         res.json({rawDiff: rawDiff});
     } catch (error) {
         console.error("Error: ${error}");
@@ -37,16 +48,24 @@ app.get('/diff', async (req, res) => {
 });
 
 app.get('/repositories', async (req, res) => {
-    let repositories = await repositoryOps.getAvailableRepositories()
-    res.json(repositories);
+    try {
+        let repositories = await repositoryOps.getAvailableRepositories()
+        res.json(repositories);
+    } catch (error) {
+        console.error("Error: ${error}");
+    }
 });
 
 app.post('/repository', async (req, res) => {
-    // log the request body
-    // console.log(req.body.url)
-    let repository = req.body.url
+    try {
+        // log the request body
+        // console.log(req.body.url)
+        let repository = req.body.url
 
-    // clone the repository into the git-repos folder
-    let result = await repositoryOps.cloneRepository(repository)
-    res.json({ message: result })
+        // clone the repository into the git-repos folder
+        let result = await repositoryOps.cloneRepository(repository)
+        res.json({message: result})
+    } catch (error) {
+        console.error("Error: ${error}");
+    }
 });
