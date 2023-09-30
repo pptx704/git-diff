@@ -36,6 +36,11 @@ app.get('/diff', async (req, res) => {
     }
 });
 
+app.get('/repositories', async (req, res) => {
+    let repositories = await repositoryOps.getAvailableRepositories()
+    res.json(repositories);
+});
+
 app.post('/repository', async (req, res) => {
     // log the request body
     // console.log(req.body.url)

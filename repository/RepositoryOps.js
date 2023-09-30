@@ -58,6 +58,15 @@ async function getRawDiff(repoPath, originalHash, updatedHash) {
     return execSync(command, { encoding: 'utf-8' });
 }
 
+async function getAvailableRepositories() {
+    let command = `cd git-repos && ls`
+    // get the name of those repositories in the git-repos folder
+    let data = execSync(command, { encoding: 'utf-8' });
+    // strip the newline character from the end of the string
+    data = data.replace(/\n$/, "");
+    // split the string into an array
+    return data.split('\n')
+}
 
 // async function getDiff(repoPath, original, updated) {
 //     let repo = await Git.Repository.open(repoPath);
@@ -71,7 +80,7 @@ async function getRawDiff(repoPath, originalHash, updatedHash) {
 //     const patches
 // }
 
-module.exports = { getBranches, getCommits, cloneRepository, getRawDiff}
+module.exports = { getBranches, getCommits, cloneRepository, getRawDiff, getAvailableRepositories}
 //
 // let Git = require("nodegit");
 //
