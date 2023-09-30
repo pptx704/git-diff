@@ -71,26 +71,20 @@ async function getListDiff(repoPath, originalHash, updatedHash) {
 }
 
 async function getFileDiff(repoPath, originalHash, updatedHash, fileName) {
-    // get the list diff
-    let listDiff = await getListDiff(repoPath, originalHash, updatedHash)
-    // find the diff that contains the fileName
-    let diff = listDiff.find((diff) => diff.includes(fileName))
-    console.log(fileName)
+    // run git diff --filename
+    let command = `cd ${repoPath} && git diff ${originalHash} ${updatedHash} ${fileName}`
+    let diff = execSync(command, { encoding: 'utf-8' });
     // return the diff
     return diff
 }
 
 async function getFilePaths(repoPath, originalHash, updatedHash){
-    // get the list diff
-    let listDiff = await getListDiff(repoPath, originalHash, updatedHash)
-    // get the file paths
-    let filePaths = listDiff.map((diff) => {
-        let filePath = diff.split('b/')[1].split(' ')[0]
-        // split the file path by the new line character and keep the first element
-        filePath = filePath.split('\n')[0]
-        return filePath
-    })
-    // return the file paths
+    let command = `cd ${repoPath} && git diff --name-only ${originalHash} ${updatedHash}`
+    let filePaths = execSync(command, { encoding: 'utf-8' });
+    // split the file paths by the new line character
+    filePaths = filePaths.split('\n')
+    // remove the last element of the array which is an empty string
+    filePaths = filePaths.slice(0, -1)
     return filePaths
 }
 
