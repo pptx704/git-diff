@@ -40,22 +40,31 @@ async function getCommits(repoPath, branchName) {
     return commitsList;
 }
 
-async function getDiff(repoPath, original, updated) {
-    let repo = await Git.Repository.open(repoPath);
-    let originalCommit = await repo.getCommit(original);
-    let updatedCommit = await repo.getCommit(updated);
+// async function getDiff(repoPath, original, updated) {
+//     let repo = await Git.Repository.open(repoPath);
+//     let originalCommit = await repo.getCommit(original);
+//     let updatedCommit = await repo.getCommit(updated);
+//
+//     const fromTree = await originalCommit.getTree();
+//     const toTree = await updatedCommit.getTree();
+//
+//     const diff = await toTree.diff(fromTree);
+//     const patches
+// }
 
-}
-
-module.exports = { getBranches, getCommits }
-
-let Git = require("nodegit");
-
-repository = await Git.Repository.open('git-repos/casey');
-let commitA = await repository.getCommit('851bab3db71f8d1b6dd45e12e75b4e6bbc103439')
-let commitB = await repository.getCommit('40a3cb04e7487bfce47c7e2e0d0017627f764c7f')
-
-const fromTree = await commitA.getTree();
-const toTree = await commitB.getTree();
-
-const diff = await toTree.diff(fromTree);
+// module.exports = { getBranches, getCommits }
+//
+// let Git = require("nodegit");
+//
+// repository = await Git.Repository.open('git-repos/casey');
+// let commitA = await repository.getCommit('851bab3db71f8d1b6dd45e12e75b4e6bbc103439')
+// let commitB = await repository.getCommit('40a3cb04e7487bfce47c7e2e0d0017627f764c7f')
+//
+// const fromTree = await commitA.getTree();
+// const toTree = await commitB.getTree();
+//
+// const diff = await toTree.diff(fromTree);
+// patches = await diff.patches()
+// patches.forEach(async (patch) => {
+//     console.log((await patch).);
+// });
