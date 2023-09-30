@@ -40,6 +40,17 @@ async function getCommits(repoPath, branchName) {
     return commitsList;
 }
 
+async function cloneRepository(url) {
+    // get the name of the repository
+    let repoName = url.split('/').pop().split('.')[0]
+    try {
+        let repo = await Git.Clone(url, 'git-repos/' + repoName);
+        return repo
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
 // async function getDiff(repoPath, original, updated) {
 //     let repo = await Git.Repository.open(repoPath);
 //     let originalCommit = await repo.getCommit(original);
@@ -52,7 +63,7 @@ async function getCommits(repoPath, branchName) {
 //     const patches
 // }
 
-// module.exports = { getBranches, getCommits }
+module.exports = { getBranches, getCommits, cloneRepository}
 //
 // let Git = require("nodegit");
 //
