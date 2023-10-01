@@ -72,6 +72,18 @@ app.get('/filediff', async (req, res) => {
     }
 });
 
+app.get('/listdiff', async (req, res) => {
+    try {
+        let repoName = req.query.repoName ? req.query.repoName : "casey"
+        let originalHash = req.query.originalHash
+        let updatedHash = req.query.updatedHash
+        let rawDiff = await repositoryOps.getListDiff(repoPath + repoName, originalHash, updatedHash)
+        res.json({rawDiff: rawDiff});
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+});
+
 app.get('/repositories', async (req, res) => {
     try {
         let repositories = await repositoryOps.getAvailableRepositories()
